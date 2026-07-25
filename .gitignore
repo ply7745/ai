@@ -1,0 +1,8 @@
+# Xcode / XcodeGen
+MyiOShabit.xcodeproj
+DerivedData/
+build/
+*.ipa
+
+# macOS
+.DS_Store
