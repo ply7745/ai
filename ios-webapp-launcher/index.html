@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>网页盒子 · iOS WebApp Launcher</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Desktop backdrop -->
+  <div class="desktop">
+    <div class="desktop-hint">网页盒子 · WebApp Launcher</div>
+
+    <!-- iPhone device frame -->
+    <div class="device" id="device">
+      <!-- Titanium bezel + screen -->
+      <div class="screen">
+        <!-- Status bar -->
+        <div class="status-bar">
+          <span class="time" id="statusTime">9:41</span>
+          <div class="dynamic-island"></div>
+          <div class="status-right">
+            <svg class="signal" viewBox="0 0 18 12" width="18" height="12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+            <svg class="wifi" viewBox="0 0 16 12" width="16" height="12" fill="currentColor"><path d="M8 2c2.5 0 4.8.9 6.5 2.5l-1.4 1.4A7.5 7.5 0 0 0 8 4a7.5 7.5 0 0 0-5.1 1.9L1.5 4.5A9.5 9.5 0 0 1 8 2zm0 3c1.7 0 3.3.6 4.5 1.7l-1.4 1.4A4.5 4.5 0 0 0 8 7a4.5 4.5 0 0 0-3.1 1.1L3.5 6.7A6.5 6.5 0 0 1 8 5zm0 3c.8 0 1.5.3 2 .8L8 11l-2-2.2c.5-.5 1.2-.8 2-.8z"/></svg>
+            <div class="battery"><div class="battery-fill"></div></div>
+          </div>
+        </div>
+
+        <!-- ============ VIEW: HOME ============ -->
+        <section class="view view-home active" id="viewHome" data-view="home">
+          <div class="home-wallpaper"></div>
+          <div class="home-content">
+            <div class="home-header">
+              <div class="home-title">网页盒子</div>
+              <div class="home-subtitle">把常用网址变成桌面 App</div>
+            </div>
+
+            <div class="search-bar">
+              <svg viewBox="0 0 16 16" width="14" height="14" class="search-icon"><path fill="currentColor" d="M7 1a6 6 0 1 0 3.9 10.5l3.3 3.3a.7.7 0 0 0 1-1l-3.3-3.3A6 6 0 0 0 7 1zm0 1.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9z"/></svg>
+              <input type="text" placeholder="搜索网址或名称" id="searchInput" />
+            </div>
+
+            <div class="app-grid" id="appGrid"><!-- rendered by JS --></div>
+
+            <div class="page-dots"><span class="dot active"></span><span class="dot"></span></div>
+
+            <div class="dock" id="dock"><!-- 4 favorite apps --></div>
+          </div>
+          <div class="home-indicator"></div>
+        </section>
+
+        <!-- ============ VIEW: WEBVIEW ============ -->
+        <section class="view view-webview" id="viewWebview" data-view="webview">
+          <div class="webview-topbar">
+            <button class="ww-btn back" id="wwBack" aria-label="后退">
+              <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M15 5L8 12l7 7V5z"/></svg>
+            </button>
+            <button class="ww-btn forward" id="wwForward" aria-label="前进">
+              <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M9 5l7 7-7 7V5z"/></svg>
+            </button>
+            <div class="url-field">
+              <svg class="lock" viewBox="0 0 16 16" width="11" height="11"><path fill="currentColor" d="M8 1a3 3 0 0 0-3 3v2H4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm0 1.5A1.5 1.5 0 0 1 9.5 4v2h-3V4A1.5 1.5 0 0 1 8 2.5z"/></svg>
+              <span class="url-text" id="wwUrl">github.com</span>
+              <button class="reload" id="wwReload" aria-label="刷新">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>
+              </button>
+            </div>
+            <button class="ww-btn share" id="wwShare" aria-label="分享">
+              <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M14 9V3l8 9-8 9v-6c-7 0-12 4-12 4 1-9 6-12 12-12z"/></svg>
+            </button>
+          </div>
+
+          <div class="webview-stage">
+            <iframe id="webviewFrame" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
+            <div class="webview-blocked" id="webviewBlocked">
+              <div class="block-card">
+                <div class="block-favicon" id="blockFav">🌐</div>
+                <div class="block-title" id="blockTitle">网站内容</div>
+                <div class="block-desc">该站点禁止内嵌显示。可在新标签页打开，或在此应用内继续浏览同源页面。</div>
+                <button class="block-open" id="blockOpen">在新标签页打开 ↗</button>
+              </div>
+            </div>
+            <div class="webview-loading" id="webviewLoading">
+              <div class="spinner"></div>
+            </div>
+          </div>
+
+          <div class="webview-toolbar">
+            <button class="tool-btn" id="toolBack"><svg viewBox="0 0 24 24" width="26" height="26"><path fill="currentColor" d="M15 5L8 12l7 7V5z"/></svg></button>
+            <button class="tool-btn" id="toolForward"><svg viewBox="0 0 24 24" width="26" height="26"><path fill="currentColor" d="M9 5l7 7-7 7V5z"/></svg></button>
+            <button class="tool-btn" id="toolShare"><svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M12 2l4 4-4 4V8H9a4 4 0 0 0-4 4v4H3v-4a6 6 0 0 1 6-6h3V2zm-1 13h2v6h-2v-6zm0 0"/></svg></button>
+            <button class="tool-btn tool-switch" id="toolSwitch">
+              <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z"/></svg>
+              <span class="switch-badge" id="switchBadge">0</span>
+            </button>
+            <button class="tool-btn" id="toolHome"><svg viewBox="0 0 24 24" width="26" height="26"><path fill="currentColor" d="M12 3L3 11h2v9h5v-6h4v6h5v-9h2L12 3z"/></svg></button>
+          </div>
+          <div class="home-indicator dark"></div>
+        </section>
+
+        <!-- ============ SHEET: ADD / EDIT APP ============ -->
+        <div class="sheet-overlay" id="sheetOverlay"></div>
+        <div class="sheet sheet-add" id="sheetAdd">
+          <div class="sheet-handle"></div>
+          <div class="sheet-title" id="sheetAddTitle">新建网页应用</div>
+
+          <div class="icon-preview">
+            <div class="icon-tile" id="iconPreview">🌐</div>
+            <div class="icon-preview-name" id="iconPreviewName">新应用</div>
+          </div>
+
+          <label class="field">
+            <span class="field-label">网址</span>
+            <input type="url" id="inputUrl" placeholder="https://example.com" inputmode="url" autocomplete="off" />
+          </label>
+          <label class="field">
+            <span class="field-label">名称</span>
+            <input type="text" id="inputName" placeholder="应用名称" maxlength="12" autocomplete="off" />
+          </label>
+
+          <div class="field">
+            <span class="field-label">图标颜色</span>
+            <div class="color-swatches" id="colorSwatches"><!-- JS --></div>
+          </div>
+
+          <div class="field">
+            <span class="field-label">图标样式</span>
+            <div class="style-tabs" id="styleTabs">
+              <button class="style-tab active" data-style="favicon">网站图标</button>
+              <button class="style-tab" data-style="letter">首字母</button>
+              <button class="style-tab" data-style="emoji">表情</button>
+            </div>
+          </div>
+
+          <label class="field field-emoji" id="fieldEmoji">
+            <span class="field-label">Emoji</span>
+            <input type="text" id="inputEmoji" placeholder="🌐" maxlength="2" />
+          </label>
+
+          <div class="sheet-actions">
+            <button class="btn-text" id="btnCancelAdd">取消</button>
+            <button class="btn-primary" id="btnSaveApp">添加</button>
+          </div>
+        </div>
+
+        <!-- ============ SHEET: APP SWITCHER ============ -->
+        <div class="sheet sheet-switcher" id="sheetSwitcher">
+          <div class="sheet-handle"></div>
+          <div class="sheet-title">切换应用</div>
+          <div class="switcher-list" id="switcherList"><!-- JS --></div>
+          <div class="sheet-actions">
+            <button class="btn-text" id="btnCloseSwitcher">关闭</button>
+            <button class="btn-primary" id="btnNewFromSwitcher">新建应用</button>
+          </div>
+        </div>
+
+        <!-- ============ SHEET: APP CONTEXT (long-press on home) ============ -->
+        <div class="sheet sheet-context" id="sheetContext">
+          <div class="sheet-handle"></div>
+          <div class="ctx-header">
+            <div class="ctx-icon" id="ctxIcon">🌐</div>
+            <div>
+              <div class="ctx-name" id="ctxName">应用</div>
+              <div class="ctx-url" id="ctxUrl">example.com</div>
+            </div>
+          </div>
+          <div class="ctx-actions">
+            <button class="ctx-row" id="ctxOpen"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M14 3v2h3.6L8 14.6 9.4 16 18 7.4V11h2V3h-6z M5 5h4V3H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4h-2v4H5V5z"/></svg>打开应用</button>
+            <button class="ctx-row" id="ctxEdit"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M3 17.2V21h3.8L17 10.8 13.2 7 3 17.2zM20.7 7.1a1 1 0 0 0 0-1.4l-2.4-2.4a1 1 0 0 0-1.4 0l-1.8 1.8 3.8 3.8 1.8-1.8z"/></svg>编辑应用</button>
+            <button class="ctx-row" id="ctxPin"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M16 9V3H8v6l-3 4v6h6v5h2v-5h6v-6l-3-4z"/></svg><span id="ctxPinLabel">加入 Dock</span></button>
+            <button class="ctx-row danger" id="ctxDelete"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M9 3v1H4v2h1v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9z"/></svg>删除应用</button>
+          </div>
+        </div>
+
+        <!-- Toast -->
+        <div class="toast" id="toast"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
